@@ -1,0 +1,27 @@
+# Now download OpenVPN source code and update with patch
+cd $HOME
+wget https://github.com/OpenVPN/openvpn/archive/release/2.3.zip
+unzip 2.3.zip
+
+wget https://github.com/clayface/openvpn_xorpatch/archive/master.zip
+unzip master.zip
+
+cp openvpn_xorpatch-master/openvpn_xor.patch openvpn-release-2.3/
+cd openvpn-release-2.3/
+git apply --check openvpn_xor.patch
+git apply openvpn_xor.patch
+cd $HOME
+sudo mv ./openvpn-release-2.3/ /etc/openvpn
+
+# We need to add a few components to be able to compile
+sudo apt-get update
+sudo apt-get install gcc make automake autoconf dh-autoreconf file patch perl dh-make debhelper devscripts gnupg lintian quilt libtool pkg-config libssl-dev liblzo2-dev libpam0g-dev libpkcs11-helper1-dev -y
+sudo apt-get update
+
+# This is the bit where we make the new openvpn server
+cd /etc/openvpn/
+sudo autoreconf -i -v -f
+sudo ./configure --prefix=/usr
+sudo make
+sudo make install
+sudo nano /etc/init.d/openvpn
