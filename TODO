@@ -1,3 +1,6 @@
+# Taken from http://scramblevpn.wordpress.com/
+# This is how we built package
+
 # Now download OpenVPN source code and update with patch
 cd $HOME
 wget https://github.com/OpenVPN/openvpn/archive/release/2.3.zip
